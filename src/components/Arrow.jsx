@@ -9,7 +9,10 @@ const Arrow = (props) => {
     useEffect(() => {
         const interval = setInterval(() => {
             setMinute(new Date().getMinutes());
-            setSecond(new Date().getSeconds());
+            if (props.id === "second-arrow")
+                setSecond(new Date().getSeconds());
+            else
+                setMinute(new Date().getMinutes());
         }, 1000);
         return () => {
             clearInterval(interval);
