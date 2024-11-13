@@ -2,39 +2,30 @@ import {useEffect, useState} from "react";
 
 const Arrow = (props) => {
     const [style, setStyle] = useState(props.style);
-    const [minute, setMinute] = useState(new Date().getMinutes());
-    const [second, setSecond] = useState(new Date().getSeconds());
     let angle = 0;
 
+    // updates the clock every second
     useEffect(() => {
         const interval = setInterval(() => {
-            setMinute(new Date().getMinutes());
-            if (props.id === "second-arrow")
-                setSecond(new Date().getSeconds());
-            else
-                setMinute(new Date().getMinutes());
+            switch (props.id) {
+                case "second-arrow":
+                    angle = 6 * (new Date().getSeconds());
+                    setStyle({...style, transform: "rotate(" + angle + "deg)"});
+                    break;
+                case "minute-arrow":
+                    angle = 6 * (new Date().getMinutes());
+                    setStyle({...style, transform: "rotate(" + angle + "deg)"});
+                    break;
+                case "hour-arrow":
+                    angle = 30 * (new Date().getHours()) + (new Date().getMinutes()) / 2;
+                    setStyle({...style, transform: "rotate(" + angle + "deg)"});
+                    break;
+            }
         }, 1000);
         return () => {
             clearInterval(interval);
         };
-    });
-
-    useEffect(() => {
-        if (props.id === "second-arrow") {
-            angle = 6 * second;
-            setStyle({...style, transform: "rotate(" + angle + "deg)"});
-        }
-    }, [second]);
-
-    useEffect(() => {
-        if (props.id === "minute-arrow") {
-            angle = 6 * minute;
-            setStyle({...style, transform: "rotate(" + angle + "deg)"});
-        } else if (props.id === "hour-arrow") {
-            angle = 30 * (new Date().getHours()) + minute / 2;
-            setStyle({...style, transform: "rotate(" + angle + "deg)"});
-        }
-    }, [minute]);
+    }, [props.id]);
 
     return (
         <div id={props.id} style={style}>
